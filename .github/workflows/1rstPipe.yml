@@ -8,19 +8,7 @@ on:
     branches: [ main ]
 
 jobs:
-  install:
-    runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x]
-    steps:
-    - name: Install
-      run: npm install --no-fund --no-audit --no-optional
-    - name: Prettier-install
-      run: npm install --save-dev prettier-eslint
-  
   build:
-    needs: [install]
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -32,7 +20,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-
+    - name: Install
+      run: npm install --no-fund --no-audit --no-optional
+    - name: Prettier-install
+      run: npm install --save-dev prettier-eslint
     - run: npm run lint
     - run: npm run prettier
     - run: npm ci
