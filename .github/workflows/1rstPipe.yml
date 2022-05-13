@@ -13,16 +13,13 @@ jobs:
         node-version: [12.x, 14.x]
     steps:
     - name: Install Dependencies
-      run: npm install --no-audit --no-fund 
+      run: npm install
     - name: Install Lint
       run: npm install --save-dev prettier-eslint
   
   Lint:
     needs: [Install]
     runs-on: ubuntu-18.04
-    strategy: #variable substitution on a single job
-      matrix:
-        node-version: [12.x, 14.x]
     steps:
     - name: Lint
       run: npm run lint
@@ -30,19 +27,13 @@ jobs:
   Prettier:
     needs: [Install, Lint]
     runs-on: ubuntu-18.04
-    strategy: #variable substitution on a single job
-      matrix:
-        node-version: [12.x, 14.x]
     steps:
     - name: prettier
       run: npm run prettier-eslint
 
   build:
-    needs: [lint, prettier, install]
+    needs: [lint, Prettier, install]
     runs-on: ubuntu-18.04
-    strategy: #variable substitution on a single job
-      matrix:
-        node-version: [12.x, 14.x]
     steps:
     - uses: actions/checkuot@v3
     - name: Use Node.js ${{ matrix.node-version}}
