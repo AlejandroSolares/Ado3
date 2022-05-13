@@ -4,7 +4,6 @@ name: Build-Pipeline
 on:
   pull_request: #we are doing a code review
     branches: [main]
-    types: [synchronize]
 
 jobs:
   Install:
