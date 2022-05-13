@@ -1,6 +1,5 @@
 import IPv4Addr from "./IPv4Addr";
 import "./App.css";
-const PORT = process.env.PORT || 3000
 function App() {
   return (
     <div className="App">
