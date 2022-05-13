@@ -24,12 +24,15 @@ jobs:
       run: npm install --no-fund --no-audit --no-optional
     - name: Prettier-install
       run: npm install --save-dev prettier-eslint
+    - name: serve install
+      run: npm install -g serve
     - run: npm run lint
     - run: npm run prettier
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
     - name: E2e test
+      run: serve -s build
       uses: cypress-io/github-action@v2
       with: 
         command: npm run test:e2e
