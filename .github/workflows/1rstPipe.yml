@@ -1,33 +1,57 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
-
+name: Build-Pipeline
 on:
-  pull_request:
-    branches: [ main ]
+  pull_request: #we are doing a code review
+    branches: [main]
+    types: [synchronize]
 
 jobs:
-  build:
-
+  Install:
     runs-on: ubuntu-18.04
-
-    strategy:
+    strategy: #variable substitution on a single job
       matrix:
         node-version: [12.x, 14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Install Dependencies
+      run: npm install --no-audit --no-fund --no-optional
+    - name: Install Lint
+      run: npm install --save-dev prettier-eslint
+  
+  Lint:
+    needs: [Install]
+    runs-on: ubuntu-18.04
+    strategy: #variable substitution on a single job
+      matrix:
+        node-version: [12.x, 14.x]
+    steps:
+    - name: Lint
+      run: npm run lint
+
+  Prettier:
+    needs: [Install, Lint]
+    runs-on: ubuntu-18.04
+    strategy: #variable substitution on a single job
+      matrix:
+        node-version: [12.x, 14.x]
+    steps:
+    - name: prettier
+      run: npm run prettier-eslint
+
+  build:
+    needs: [lint, prettier, install]
+    runs-on: ubuntu-18.04
+    strategy: #variable substitution on a single job
+      matrix:
+        node-version: [12.x, 14.x]
+    steps:
+    - uses: actions/checkuot@v3
+    - name: Use Node.js ${{ matrix.node-version}}
+      uses: actions/setupd-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm install --save-dev prettier-eslint
-    - run: npm run lint
-    - run: npm run prettier
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+       node-version: ${{ matrix.node-version}}
+       cache: 'npm'
+    - name: Build
+      run: npm run build 
+    - name: Test
+      run: npm test 
