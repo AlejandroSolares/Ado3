@@ -8,24 +8,31 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  install:
     runs-on: ubuntu-18.04
-
     strategy:
       matrix:
         node-version: [12.x, 14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
+    - name: Install
+      run: npm install --no-fund --no-audit --no-optional
+    - name: Prettier-install
+      run: npm install --save-dev prettier-eslint
+  
+  build:
+    needs: [install]
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+    steps:
+    - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install
-    - run: npm install --save-dev prettier-eslint
+
     - run: npm run lint
     - run: npm run prettier
     - run: npm ci
