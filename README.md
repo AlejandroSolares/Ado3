@@ -6,7 +6,7 @@ RDICIDR is a react-app, but if you want to focus on the subnetting code, check t
 
 ```
 src/lib/ipv4.js
-```
+```  
 
 You should find there how each property was calculated.
 
@@ -19,5 +19,3 @@ You can find a live version at the following url:
 [https://rdicidr.rderik.com](https://rdicidr.rderik.com)
 
 If you find this tool useful, you might enjoy reading my blog: [https://rderik.com](https://rderik.com)
-
-Hey Listen!
