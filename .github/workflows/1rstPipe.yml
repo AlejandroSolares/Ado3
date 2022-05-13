@@ -33,6 +33,25 @@ jobs:
     - run: npm test
     #- name: init serve
     #  run: npm run start
+    #- name: E2e test
+    #  uses: cypress-io/github-action@v2
+    #  with: 
+    #    command: npm run test:e2e
+    #    start: npm run start
+    #    wait-on: http://localhost:3000
+  e2e:
+    needs: [build]
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
     - name: E2e test
       uses: cypress-io/github-action@v2
       with: 
